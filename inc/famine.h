@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <elf.h>
+#include <signal.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -15,5 +16,8 @@
 #include "color.h"
 
 int		write_string(char *ptr, size_t size, char *path, int fd);
+int		outputhandle(int ac, char **av);
+
+char		*message;
 
 #endif

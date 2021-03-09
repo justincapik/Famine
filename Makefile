@@ -16,7 +16,8 @@ OBJ_DIR  =		./obj/
 
 SRC_DIR =	./src/
 SRC_WWP = 	main.c\
-		write.c
+		write.c\
+		output_handle.c
 
 
 SRCS      =	$(addprefix $(SRC_DIR), $(SRC_WWP))

@@ -3,3 +3,5 @@ test.c
 obj
 Famine
 .DS_Store
+a.out
+*.swp

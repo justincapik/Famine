@@ -16,7 +16,8 @@ OBJ_DIR  =		./obj/
 
 SRC_DIR =	./src/
 SRC_WWP = 	main.c\
-		write.c\
+		write64.c\
+		write32.c\
 		output_handle.c
 
 
